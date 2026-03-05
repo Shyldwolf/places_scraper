@@ -1,0 +1,11 @@
+# outputs
+*.csv
+scraper.log
+*.log
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
