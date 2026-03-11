@@ -11,7 +11,7 @@ from config import (
     KEYWORDS,
 )
 from data import US_STATES, fetch_cities
-from utils import slugify, score_lead, recommend_pitch
+from utils import slugify, score_lead, recommend_pitch, missing_notes
 from google_places import text_search, place_details, wait_for_next_page
 
 # ── Page config ──────────────────────────────────────────────────────────────
@@ -175,11 +175,13 @@ if run:
                     "Rating":         details.get("rating", ""),
                     "Reviews":        details.get("user_ratings_total", ""),
                     "BusinessStatus": details.get("business_status", ""),
+                    "GoogleMapsURL":  details.get("url", ""),
                     "PlaceID":        pid,
                     "Keyword":        keyword,
                 }
-                row["Score"] = score_lead(row)
-                row["Pitch"] = recommend_pitch(row)
+                row["Score"]   = score_lead(row)
+                row["Pitch"]   = recommend_pitch(row)
+                row["Notes"]   = missing_notes(row)
                 rows.append(row)
 
                 counter_box.metric("Leads encontrados", len(rows))

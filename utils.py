@@ -70,6 +70,32 @@ def recommend_pitch(row: dict) -> str:
     return " + ".join(services)
 
 
+def missing_notes(row: dict) -> str:
+    """
+    Describe lo que le falta al perfil del negocio.
+    Para que el vendedor sepa exactamente que decirle al cliente.
+    """
+    has_website = bool(str(row.get("Website", "")).strip())
+    try:
+        reviews = int(row.get("Reviews", 0) or 0)
+    except (ValueError, TypeError):
+        reviews = 0
+    try:
+        rating = float(row.get("Rating", 5.0) or 5.0)
+    except (ValueError, TypeError):
+        rating = 5.0
+
+    notes = []
+    if not has_website:
+        notes.append("Sin website")
+    if reviews < 30:
+        notes.append(f"{reviews} reseñas (le faltan {30 - reviews} para 30)")
+    if rating < 4.0:
+        notes.append(f"Rating {rating} (bajo 4.0)")
+
+    return " | ".join(notes) if notes else "Perfil completo"
+
+
 def setup_logger() -> logging.Logger:
     """
     Configura logging a consola + archivo.

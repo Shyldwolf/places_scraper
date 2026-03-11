@@ -68,6 +68,7 @@ def place_details(logger, api_key: str, place_id: str) -> dict:
         "rating",
         "user_ratings_total",
         "business_status",
+        "url",
     ])
     params = {"place_id": place_id, "fields": fields, "key": api_key}
     return safe_get(logger, DETAILS_URL, params=params, retries=DETAILS_RETRIES, backoff=BACKOFF_BASE)
