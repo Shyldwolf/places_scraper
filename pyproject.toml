@@ -1,0 +1,11 @@
+[project]
+name = "ys-lead-scraper"
+version = "0.1.0"
+description = "Google Places lead scraper — YS Business Services"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31.0",
+    "streamlit>=1.35.0",
+    "pandas>=2.0.0",
+    "textual>=0.61.0",
+]
