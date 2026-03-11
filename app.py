@@ -225,6 +225,10 @@ if run:
     else:
         df = pd.DataFrame(rows)
 
+        # Normalizar tipos para evitar errores Arrow
+        df["Rating"]  = pd.to_numeric(df["Rating"],  errors="coerce")
+        df["Reviews"] = pd.to_numeric(df["Reviews"], errors="coerce").astype("Int64")
+
         # Aplicar filtros
         if only_no_website:
             df = df[df["Website"].astype(str).str.strip() == ""]
@@ -252,8 +256,8 @@ if run:
                       "Cold": "background-color: #d3d3d3; color: black"}
             return colors.get(val, "")
 
-        styled = df.style.applymap(color_score, subset=["Score"])
-        st.dataframe(styled, use_container_width=True, height=450)
+        styled = df.style.map(color_score, subset=["Score"])
+        st.dataframe(styled, width="stretch", height=450)
 
         # ── Descarga ──────────────────────────────────────────────────────────
         filename = f"{state}_{slugify(keyword)}_places.csv"
@@ -264,7 +268,7 @@ if run:
             data=csv_data,
             file_name=filename,
             mime="text/csv",
-            use_container_width=True,
+            width="stretch",
         )
 
         logger.info("Saved %s leads — file: %s", len(df), filename)
