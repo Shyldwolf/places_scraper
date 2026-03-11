@@ -9,6 +9,7 @@ from config import (
     NEXT_PAGE_INITIAL_WAIT,
     NEXT_PAGE_MAX_WAIT,
     KEYWORDS,
+    METRO_AREAS,
 )
 from data import US_STATES, fetch_cities
 from utils import slugify, score_lead, recommend_pitch, missing_notes
@@ -83,6 +84,24 @@ with st.sidebar:
         default=available_cities[:3],
         help=f"Selecciona hasta {MAX_CITIES} ciudades.",
     )
+
+    # Sugerencias de ciudades cercanas
+    if selected_cities:
+        state_metros = METRO_AREAS.get(state, {})
+        nearby = set()
+        for city in selected_cities:
+            for neighbor in state_metros.get(city, []):
+                if neighbor not in selected_cities and neighbor in available_cities:
+                    nearby.add(neighbor)
+        if nearby:
+            st.caption("Ciudades cercanas sugeridas:")
+            suggested = st.multiselect(
+                "Agregar al area?",
+                options=sorted(nearby),
+                default=[],
+                key="nearby_suggestions",
+            )
+            selected_cities = list(set(selected_cities + suggested))
 
     too_many = len(selected_cities) > MAX_CITIES
     if too_many:
